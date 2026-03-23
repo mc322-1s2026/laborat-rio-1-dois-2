@@ -255,4 +255,8 @@ public class Main {
         if (str == null) return "";
         return str.length() > tam ? str.substring(0, tam - 3) + "..." : str;
     }
+
+    public static List<User> getUsers() {
+        return users;
+    }
 }
