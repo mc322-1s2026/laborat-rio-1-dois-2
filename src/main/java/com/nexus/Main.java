@@ -108,13 +108,11 @@ public class Main {
             System.out.print("Prazo (AAAA-MM-DD): ");
             LocalDate deadline = LocalDate.parse(scanner.nextLine());
             System.out.print("Esforço estimado (horas): ");
-            int estimatedEffort = 1; // default
+            int estimatedEffort = 0;
             try {
                 estimatedEffort = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e) {
-                System.out.print("Não foi passado um número válido; será usado 1 hora.");
-                estimatedEffort = 1;
-                
+                System.err.println("[ERRO] Não foi passado um número válido.");
             }
 
             Task newTask = new Task(title, deadline, estimatedEffort);
