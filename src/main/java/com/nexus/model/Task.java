@@ -56,7 +56,13 @@ public class Task {
      * Regra: Só pode ser movida para DONE se não estiver BLOCKED.
      */
     public void markAsDone() {
-        // TODO: Implementar lógica de proteção e atualizar activeWorkload (decrementar)
+        if (this.status == TaskStatus.BLOCKED) {
+            totalValidationErrors++;
+            throw new NexusValidationException("Erro ao mudar status: Tarefa não pode ter status BLOCKED.");
+        }
+
+        activeWorkload--;
+        this.status = TaskStatus.DONE;
     }
 
     public void setBlocked(boolean blocked) {
