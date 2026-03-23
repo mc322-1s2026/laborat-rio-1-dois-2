@@ -1,6 +1,7 @@
 package com.nexus.model;
 
 import java.time.LocalDate;
+import com.nexus.exception.NexusValidationException;
 
 public class Task {
     // Métricas Globais (Alunos implementam a lógica de incremento/decremento)
@@ -31,9 +32,23 @@ public class Task {
      * Regra: Só é possível se houver um owner atribuído e não estiver BLOCKED.
      */
     public void moveToInProgress(User user) {
-        // TODO: Implementar lógica de proteção e atualizar activeWorkload
+        // TODO (task original): Implementar lógica de proteção e atualizar activeWorkload
         // Se falhar, incrementar totalValidationErrors e lançar NexusValidationException
+
+        // !importante TODO: Verificar uso de argumento user; Ainda não consegui entender o motivo dessa função receber um parametro user. Achei que a verificação devia ser feita com this.owner.
         
+        if (this.owner == null) {
+            totalValidationErrors++;
+            throw new NexusValidationException("Erro ao mudar status: Tarefa deve ter um dono.");
+        }
+
+        if (this.status == TaskStatus.BLOCKED) {
+            totalValidationErrors++;
+            throw new NexusValidationException("Erro ao mudar status: Tarefa não pode ter status BLOCKED.");
+        }
+
+        activeWorkload++;
+        this.status = TaskStatus.IN_PROGRESS;
     }
 
     /**
