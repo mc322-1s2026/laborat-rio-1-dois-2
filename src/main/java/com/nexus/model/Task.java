@@ -16,7 +16,7 @@ public class Task {
     private String title;
     private TaskStatus status;
     private User owner;
-    private int estimatedEffort;
+    private int estimatedEffort; // TODO: talvez seja float
 
     public Task(String title, LocalDate deadline, int estimatedEffort) {
         this.id = nextId++;

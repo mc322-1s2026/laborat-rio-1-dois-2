@@ -107,8 +107,17 @@ public class Main {
             String title = scanner.nextLine();
             System.out.print("Prazo (AAAA-MM-DD): ");
             LocalDate deadline = LocalDate.parse(scanner.nextLine());
+            System.out.print("Esforço estimado (horas): ");
+            int estimatedEffort = 1; // default
+            try {
+                estimatedEffort = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.print("Não foi passado um número válido; será usado 1 hora.");
+                estimatedEffort = 1;
+                
+            }
 
-            Task newTask = new Task(title, deadline);
+            Task newTask = new Task(title, deadline, estimatedEffort);
             workspace.addTask(newTask);
             System.out.println("[OK] Tarefa adicionada ao backlog.");
         } catch (DateTimeParseException e) {
