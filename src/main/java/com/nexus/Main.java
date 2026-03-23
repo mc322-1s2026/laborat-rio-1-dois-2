@@ -135,17 +135,18 @@ public class Main {
             return;
         }
 
-        String header = "+----+----------------------+-------------+------------+";
+        String header = "+----+----------------------+-------------+------------+---------+";
         System.out.println("\n" + header);
-        System.out.printf("| %-2s | %-20s | %-11s | %-10s |%n", "ID", "TÍTULO", "STATUS", "DEADLINE");
+        System.out.printf("| %-2s | %-20s | %-11s | %-10s | %-7s |%n", "ID", "TÍTULO", "STATUS", "DEADLINE", "ESFORÇO");
         System.out.println(header);
 
         for (Task t : tasks) {
-            System.out.printf("| %-2d | %-20s | %-11s | %-10s |%n",
+            System.out.printf("| %-2d | %-20s | %-11s | %-10s | %-7s |%n",
                     t.getId(),
                     truncar(t.getTitle(), 20),
                     t.getStatus(),
-                    t.getDeadline());
+                    t.getDeadline(),
+                    t.getEstimatedEffort());
         }
         System.out.println(header);
         System.out.println("Total de tarefas: " + Task.totalTasksCreated);
