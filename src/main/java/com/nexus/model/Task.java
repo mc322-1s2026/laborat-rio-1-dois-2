@@ -10,8 +10,8 @@ public class Task {
 
     private static int nextId = 1;
 
-    private int id;
-    private LocalDate deadline; // Imutável após o nascimento
+    private final int id;
+    private final LocalDate deadline; // Imutável após o nascimento
     private String title;
     private TaskStatus status;
     private User owner;
@@ -33,6 +33,7 @@ public class Task {
     public void moveToInProgress(User user) {
         // TODO: Implementar lógica de proteção e atualizar activeWorkload
         // Se falhar, incrementar totalValidationErrors e lançar NexusValidationException
+        
     }
 
     /**
