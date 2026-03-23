@@ -2,6 +2,8 @@ package com.nexus.model;
 
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import com.nexus.service.Workspace;
+import java.util.stream.Stream;
 
 public class User {
     private final String username;
@@ -40,7 +42,14 @@ public class User {
         return username;
     }
 
-    public long calculateWorkload() {
-        return 0; 
+    // gets all tasks from workspace, filters the ones owned by this and that have status "IN_PROGRESS"
+    public Stream<Task> getUserTasksInProgress(Workspace workspace){
+            return workspace.getTasks().stream()
+            .filter(task -> task.getOwner().equals(this))
+            .filter(task -> task.getStatus().equals(TaskStatus.IN_PROGRESS));
+        }
+
+    public long calculateWorkload(Workspace workspace) {
+        return getUserTasksInProgress(workspace).count();
     }
 }
