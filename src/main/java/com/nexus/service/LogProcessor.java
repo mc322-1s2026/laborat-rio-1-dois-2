@@ -34,7 +34,10 @@ public class LogProcessor {
                                 System.out.println("[LOG] Usuário criado: " + p[1]);
                             }
                             case "CREATE_TASK" -> {
-                                Task t = new Task(p[1], LocalDate.parse(p[2]));
+                                // TODO: provavelmente precisa ser revisto
+                                // se o log já tiver um campo que representa o estimatedEffort, lê ele. Se não, usa 1
+                                int estimatedEffort = p.length > 3 ? Integer.parseInt(p[3]) : 1; // 
+                                Task t = new Task(p[1], LocalDate.parse(p[2]), estimatedEffort); 
                                 workspace.addTask(t);
                                 System.out.println("[LOG] Tarefa criada: " + p[1]);
                             }

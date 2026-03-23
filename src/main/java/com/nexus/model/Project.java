@@ -21,7 +21,6 @@ public class Project {
 
     public void addTask(Task t) {
         // TODO: Este método deve validar se a soma das horas de todas as tarefas atuais + a nova tarefa excede o totalBudget do projeto. Se exceder, lance NexusValidationException.
-        // TODO: Antes de implementar esse método, deve-se implementar o campo estimatedEffort às tasks.
     } 
 
     public String getName() {
