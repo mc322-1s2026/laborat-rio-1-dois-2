@@ -67,6 +67,10 @@ public class Task {
 
     public void setBlocked(boolean blocked) {
         if (blocked) {
+            if (this.status == TaskStatus.DONE) {
+                totalValidationErrors++;
+                throw new NexusValidationException("Erro ao bloquear tarefa: Tarefa não pode ter status DONE.");
+            }
             this.status = TaskStatus.BLOCKED;
         } else {
             this.status = TaskStatus.TO_DO; // Simplificação para o Lab
