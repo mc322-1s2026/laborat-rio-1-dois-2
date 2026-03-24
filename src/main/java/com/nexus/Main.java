@@ -232,8 +232,13 @@ public class Main {
             Task task = workspace. getTaskById(taskId);
             if (task == null) System.err.print("[ERRO] Tarefa não encontrada.");
             else {
-                project.addTask(task);
-                System.out.print("[OK] Tarefa adicionada ao projeto");
+                try {
+                    project.addTask(task);
+                    System.out.print("[OK] Tarefa adicionada ao projeto");
+                } catch (Exception e) {
+                    System.err.print(e.getMessage());
+                }
+
             }
         }
     }
