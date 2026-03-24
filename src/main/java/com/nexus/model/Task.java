@@ -19,14 +19,21 @@ public class Task {
     private int estimatedEffort;
 
     public Task(String title, LocalDate deadline, int estimatedEffort) {
-        this.id = nextId++;
-        this.deadline = deadline;
-        this.title = title;
-        this.status = TaskStatus.TO_DO;
+        if (title == null || title.isBlank())
+            throw new IllegalArgumentException("Título não pode ser vazio.");
+
+        if (deadline == null)
+            throw new IllegalArgumentException("Deadline não pode ser nulo.");
+
         if (estimatedEffort < 0) {
             totalValidationErrors++;
             throw new NexusValidationException("Esforço estimado não pode ser negativo.");
         }
+
+        this.id = nextId++;
+        this.deadline = deadline;
+        this.title = title;
+        this.status = TaskStatus.TO_DO;
         this.estimatedEffort = estimatedEffort;
         
         // Ação do Aluno:
@@ -46,7 +53,6 @@ public class Task {
      * Regra: Só é possível se houver um owner atribuído e não estiver BLOCKED.
      */
     public void moveToInProgress() {
-        // !importante TODO: Verificar uso de argumento user; Ainda não consegui entender o motivo dessa função receber um parametro user. Achei que a verificação devia ser feita com this.owner.
         
         if (this.owner == null) {
             totalValidationErrors++;
@@ -99,7 +105,11 @@ public class Task {
 
     public void changeStatus(TaskStatus newStatus){
         switch (newStatus){
-            case TO_DO -> this.status = TaskStatus.TO_DO;
+            case TO_DO -> {
+                if (this.status == TaskStatus.IN_PROGRESS)
+                    activeWorkload--;
+                this.status = TaskStatus.TO_DO;
+            }
             case IN_PROGRESS -> moveToInProgress();
             case BLOCKED -> setBlocked(true);   
             case DONE -> markAsDone();
