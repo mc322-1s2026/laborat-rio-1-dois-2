@@ -33,11 +33,19 @@ public class Task {
         totalTasksCreated++; 
     }
 
+    public void assignUser(User user){
+        if (user == null){
+            totalValidationErrors++;
+            throw new NexusValidationException("Usuário não existe");
+        }
+        this.owner = user;
+    }
+
     /**
      * Move a tarefa para IN_PROGRESS.
      * Regra: Só é possível se houver um owner atribuído e não estiver BLOCKED.
      */
-    public void moveToInProgress(User user) {
+    public void moveToInProgress() {
         // !importante TODO: Verificar uso de argumento user; Ainda não consegui entender o motivo dessa função receber um parametro user. Achei que a verificação devia ser feita com this.owner.
         
         if (this.owner == null) {
@@ -49,8 +57,10 @@ public class Task {
             totalValidationErrors++;
             throw new NexusValidationException("Erro ao mudar status: Tarefa não pode ter status BLOCKED.");
         }
+        //Verificação caso seja testado uma tarefa que já está IN_PROGRESS e evitar que o activeWorkload seja incrementado falhamente
+        if (this.status != TaskStatus.IN_PROGRESS)
+            activeWorkload++;
 
-        activeWorkload++;
         this.status = TaskStatus.IN_PROGRESS;
     }
 
@@ -64,7 +74,9 @@ public class Task {
             throw new NexusValidationException("Erro ao mudar status: Tarefa não pode ter status BLOCKED.");
         }
 
-        activeWorkload--;
+        if (this.status == TaskStatus.IN_PROGRESS)
+            activeWorkload--;
+
         this.status = TaskStatus.DONE;
     }
 
@@ -74,6 +86,11 @@ public class Task {
                 totalValidationErrors++;
                 throw new NexusValidationException("Erro ao bloquear tarefa: Tarefa não pode ter status DONE.");
             }
+
+            //Decrementa o activeWorkload porque deixa de existir uma tarefa IN_PROGRESS
+            if (this.status == TaskStatus.IN_PROGRESS)
+                activeWorkload--;
+
             this.status = TaskStatus.BLOCKED;
         } else {
             this.status = TaskStatus.TO_DO; // Simplificação para o Lab
