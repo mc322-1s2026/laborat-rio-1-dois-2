@@ -9,6 +9,7 @@ import java.util.Scanner;
 import com.nexus.exception.NexusValidationException;
 import com.nexus.model.Task;
 import com.nexus.model.User;
+import com.nexus.model.Project;
 import com.nexus.service.LogProcessor;
 import com.nexus.service.Workspace;
 
@@ -53,6 +54,8 @@ public class Main {
                     String file = (logChoice.equals("1")) ? "log_v1.txt" : "log_v2.txt";
                     logProcessor.processLog(file, workspace, users);
                 }
+                case "5" -> addProject();
+                case "6" -> projectsTab();
                 default -> System.out.println("\n[!] Opção inválida.");
             }
         }
@@ -72,6 +75,8 @@ public class Main {
             2. Adicionar Tarefa
             3. Listar Todas as Tarefas
             4. Processar Log de Ações
+            5. Adicionar Projeto
+            6. Listar e/ou editar Projetos
             0. Sair
             Escolha uma opção:\s""");
     }
@@ -150,6 +155,87 @@ public class Main {
         }
         System.out.println(header);
         System.out.println("Total de tarefas: " + Task.totalTasksCreated);
+    }
+
+
+    /**
+     * Coleta dados do projeto novo, cria-o e adiciona-o ao workspace. Erros de parsing de data são informados no
+     * stderr.
+     */
+    private static void addProject() {
+        try {
+            System.out.print("Nome do projeto: ");
+            String name = scanner.nextLine();
+            System.out.print("Esforço (Budget) total, em horas: ");
+            int totalBudget = Integer.parseInt(scanner.nextLine());
+
+            Project newProject = new Project(name, totalBudget);
+            workspace.addProject(newProject);
+            System.out.println("[OK] Projeto adicionado.");
+        }
+        catch (Exception e) {
+            System.err.print(e.getMessage());
+        }
+    }
+
+    private static void projectsTab() {
+        System.out.print("""
+                ======= NEXUS CORE: Projetos =======
+            1. Listar todos os projetos
+            2. Adicionar uma tarefa a um projeto
+            0. Voltar ao menu
+            Escolha uma opção:\s
+                """);
+                String choice = scanner.nextLine();
+                switch (choice) {
+                    case "0": {
+                        System.out.println("Voltando ao menu principal");
+                        break;
+                    }
+                    case "1": listProjects(); break;
+                    case "2": addTaskToProject(); break;
+                }
+    }
+
+    private static void listProjects() {
+        List<Project> projects = workspace.getProjects();
+        if (projects.isEmpty()) {
+            System.out.println("\n[!] Nenhuma tarefa no sistema.");
+            return;
+        }
+
+        String header = "+----------------------+--------------+--------------";
+        System.out.println("\n" + header);
+        System.out.printf("| %-20s | %-12s | %-12s |%n", "NOME", "ESFORÇO MÁX.", "QTD. TASKS");
+        System.out.println(header);
+
+        for (Project p : projects) {
+            System.out.printf("| %-20s | %-12d | %-12d |%n",
+                    p.getName(),
+                    p.getTotalBudget(),
+                    p.getTasks().size()
+                );
+        }
+        System.out.println(header);
+    }
+
+    private static void addTaskToProject() {
+        System.out.print("Nome do projeto a ser editado: ");
+        String projectName = scanner.nextLine();
+        System.out.print("ID da task a ser adicionada: ");
+        Integer taskId = Integer.parseInt(scanner.nextLine());
+        Project project = workspace.getProjectByName(projectName);
+        if (project == null) {
+            System.err.print("[ERRO] Projeto não encontrado.");
+        }
+        else {
+            Task task = workspace. getTaskById(taskId);
+            if (task == null) System.err.print("[ERRO] Tarefa não encontrada.");
+            else {
+                project.addTask(task);
+                System.out.print("[OK] Tarefa adicionada ao projeto");
+            }
+        }
     }
 
     /**
