@@ -200,7 +200,7 @@ public class Main {
     private static void listProjects() {
         List<Project> projects = workspace.getProjects();
         if (projects.isEmpty()) {
-            System.out.println("\n[!] Nenhuma tarefa no sistema.");
+            System.out.println("\n[!] Nenhum projeto no sistema.");
             return;
         }
 
