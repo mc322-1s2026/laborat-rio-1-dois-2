@@ -107,8 +107,15 @@ public class Main {
             String title = scanner.nextLine();
             System.out.print("Prazo (AAAA-MM-DD): ");
             LocalDate deadline = LocalDate.parse(scanner.nextLine());
+            System.out.print("Esforço estimado (horas): ");
+            int estimatedEffort = 0;
+            try {
+                estimatedEffort = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.err.println("[ERRO] Não foi passado um número válido.");
+            }
 
-            Task newTask = new Task(title, deadline);
+            Task newTask = new Task(title, deadline, estimatedEffort);
             workspace.addTask(newTask);
             System.out.println("[OK] Tarefa adicionada ao backlog.");
         } catch (DateTimeParseException e) {
@@ -128,17 +135,18 @@ public class Main {
             return;
         }
 
-        String header = "+----+----------------------+-------------+------------+";
+        String header = "+----+----------------------+-------------+------------+---------+";
         System.out.println("\n" + header);
-        System.out.printf("| %-2s | %-20s | %-11s | %-10s |%n", "ID", "TÍTULO", "STATUS", "DEADLINE");
+        System.out.printf("| %-2s | %-20s | %-11s | %-10s | %-7s |%n", "ID", "TÍTULO", "STATUS", "DEADLINE", "ESFORÇO");
         System.out.println(header);
 
         for (Task t : tasks) {
-            System.out.printf("| %-2d | %-20s | %-11s | %-10s |%n",
+            System.out.printf("| %-2d | %-20s | %-11s | %-10s | %-7s |%n",
                     t.getId(),
                     truncar(t.getTitle(), 20),
                     t.getStatus(),
-                    t.getDeadline());
+                    t.getDeadline(),
+                    t.getEstimatedEffort());
         }
         System.out.println(header);
         System.out.println("Total de tarefas: " + Task.totalTasksCreated);

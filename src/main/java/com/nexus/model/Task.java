@@ -16,12 +16,18 @@ public class Task {
     private String title;
     private TaskStatus status;
     private User owner;
+    private int estimatedEffort; // TODO: talvez seja float
 
-    public Task(String title, LocalDate deadline) {
+    public Task(String title, LocalDate deadline, int estimatedEffort) {
         this.id = nextId++;
         this.deadline = deadline;
         this.title = title;
         this.status = TaskStatus.TO_DO;
+        if (estimatedEffort < 0) {
+            totalValidationErrors++;
+            throw new NexusValidationException("Esforço estimado não pode ser negativo.");
+        }
+        this.estimatedEffort = estimatedEffort;
         
         // Ação do Aluno:
         totalTasksCreated++; 
@@ -83,4 +89,5 @@ public class Task {
     public String getTitle() { return title; }
     public LocalDate getDeadline() { return deadline; }
     public User getOwner() { return owner; }
+    public int getEstimatedEffort() { return estimatedEffort; }
 }
