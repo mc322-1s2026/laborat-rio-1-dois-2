@@ -57,6 +57,7 @@ public class Workspace {
     public List<User> topPerformers(){
         return tasks.stream()
             .filter(task -> task.getStatus().equals(TaskStatus.DONE))
+            .filter(task -> task.getOwner() != null)
             .map(Task::getOwner)
             .collect(Collectors.groupingBy(
             user -> user,
@@ -73,6 +74,7 @@ public class Workspace {
     public List<User> overloadedUsers(){
         return tasks.stream()
             .filter(task -> task.getStatus().equals(TaskStatus.IN_PROGRESS))
+            .filter(task -> task.getOwner() != null)
             .map(Task::getOwner)
             .collect(Collectors.groupingBy(
             user -> user,
