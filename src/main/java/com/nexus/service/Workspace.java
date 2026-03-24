@@ -3,12 +3,14 @@ package com.nexus.service;
 import com.nexus.model.User;
 import com.nexus.model.Task;
 import com.nexus.model.TaskStatus;
+import com.nexus.exception.NexusValidationException;
 import com.nexus.model.Project;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.Collections;
+import com.nexus.Main;
 
 public class Workspace {
     private final List<Task> tasks = new ArrayList<>();
