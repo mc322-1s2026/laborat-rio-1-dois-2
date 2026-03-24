@@ -9,7 +9,7 @@ public class User {
     private final String username;
     private final String email;
 
-    // regex that eliminates most of the invalid email addresses (not all)
+    // Regex that eliminates most of the invalid email addresses (not all)
     private static final String EMAIL_REGEX = "^[a-zA-Z0-9'!#$%*+\\-\\./=?^_`{|}~]{1,64}@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}$";
 
     public User(String username, String email) {
@@ -22,7 +22,7 @@ public class User {
     }
 
     private void validateEmail(String email) {
-        // method that validates if a given email follows the pattern, and throws an exception if not
+        // Method that validates if a given email follows the pattern, and throws an exception if not
 
         if (email == null || email.isBlank())
             throw new IllegalArgumentException("Email não pode ser vazio.");
@@ -42,11 +42,10 @@ public class User {
         return username;
     }
 
-    // gets all tasks from workspace, filters the ones owned by this and that have status "IN_PROGRESS"
-    // TODO: talvez seja melhor retornar lista
+    // Gets all tasks from workspace, filters the ones owned by this and that have status "IN_PROGRESS"
     public Stream<Task> getUserTasksInProgress(Workspace workspace){
-            return workspace.getTasks().stream()
-            .filter(task -> task.getOwner().equals(this))
+        return workspace.getTasks().stream()
+            .filter(task -> task.getOwner() != null && task.getOwner().equals(this))
             .filter(task -> task.getStatus().equals(TaskStatus.IN_PROGRESS));
         }
 
