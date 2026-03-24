@@ -14,6 +14,9 @@ public class Project {
     private int currentBudget; // sum of the estimatedEfforts of all tasks in project currently
 
     public Project(String name, int totalBudget) {
+        if (name == null || name.isBlank())
+            throw new IllegalArgumentException("Nome do projeto não pode ser vazio.");
+
         this.name = name;
         this.tasks = new ArrayList<>();
         if (totalBudget < 0) {

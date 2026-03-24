@@ -3,12 +3,14 @@ package com.nexus.service;
 import com.nexus.model.User;
 import com.nexus.model.Task;
 import com.nexus.model.TaskStatus;
+import com.nexus.exception.NexusValidationException;
 import com.nexus.model.Project;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.Collections;
+import com.nexus.Main;
 
 public class Workspace {
     private final List<Task> tasks = new ArrayList<>();
@@ -33,17 +35,25 @@ public class Workspace {
 
     public Project getProjectByName(String name) {
         return projects.stream()
-        .filter(p -> p.getName().equals(name))
-        .findFirst()
-        .orElse(null);
+            .filter(p -> p.getName().equals(name))
+            .findFirst()
+            .orElseThrow(() -> new NexusValidationException("Projeto não encontrado: " + name));
     }
 
     public Task getTaskById(int id) {
         return tasks.stream()
-        .filter(t -> t.getId() == id)
-        .findFirst()
-        .orElse(null);
+            .filter(t -> t.getId() == id)
+            .findFirst()
+            .orElseThrow(() -> new NexusValidationException("Tarefa não encontrada: " + id));
     }
+
+    public User getUserByUsername(String username){
+        return Main.getUsers().stream()
+            .filter(u -> u.consultUsername().equals(username))
+            .findFirst()
+            .orElseThrow(() -> new NexusValidationException("Usuário não encontrado: " + username));
+    }
+
     public List<User> topPerformers(){
         return tasks.stream()
             .filter(task -> task.getStatus().equals(TaskStatus.DONE))
