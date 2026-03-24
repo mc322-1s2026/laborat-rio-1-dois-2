@@ -16,7 +16,7 @@ public class Task {
     private String title;
     private TaskStatus status;
     private User owner;
-    private int estimatedEffort; // TODO: talvez seja float
+    private int estimatedEffort;
 
     public Task(String title, LocalDate deadline, int estimatedEffort) {
         this.id = nextId++;
@@ -38,9 +38,6 @@ public class Task {
      * Regra: Só é possível se houver um owner atribuído e não estiver BLOCKED.
      */
     public void moveToInProgress(User user) {
-        // TODO (task original): Implementar lógica de proteção e atualizar activeWorkload
-        // Se falhar, incrementar totalValidationErrors e lançar NexusValidationException
-
         // !importante TODO: Verificar uso de argumento user; Ainda não consegui entender o motivo dessa função receber um parametro user. Achei que a verificação devia ser feita com this.owner.
         
         if (this.owner == null) {
