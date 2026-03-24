@@ -250,8 +250,4 @@ public class Main {
     public static List<User> getUsers() {
         return users;
     }
-
-    public void setUser(User user){
-        users.add(user);
-    }
 }

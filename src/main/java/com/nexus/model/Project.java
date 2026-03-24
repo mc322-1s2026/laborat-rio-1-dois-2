@@ -20,7 +20,7 @@ public class Project {
         this.name = name;
         this.tasks = new ArrayList<>();
         if (totalBudget < 0) {
-            throw new IllegalArgumentException("Budget do projeto não pode ser negativo."); // TODO validar lógica de negócio
+            throw new IllegalArgumentException("Budget do projeto não pode ser negativo.");
         }
         this.totalBudget = totalBudget;
     }

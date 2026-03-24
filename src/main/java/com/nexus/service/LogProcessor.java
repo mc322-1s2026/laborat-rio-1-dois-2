@@ -71,7 +71,7 @@ public class LogProcessor {
 
                                 task.assignUser(user);
 
-                                System.out.println("[LOG] Usúario " + username + " atribuido à tarefa " + taskId);
+                                System.out.println("[LOG] Usuário " + username + " atribuido à tarefa " + taskId);
                             }
 
                             case "CHANGE_STATUS" -> {
