@@ -35,17 +35,25 @@ public class Workspace {
 
     public Project getProjectByName(String name) {
         return projects.stream()
-        .filter(p -> p.getName().equals(name))
-        .findFirst()
-        .orElse(null);
+            .filter(p -> p.getName().equals(name))
+            .findFirst()
+            .orElseThrow(() -> new NexusValidationException("Projeto não encontrado: " + name));
     }
 
     public Task getTaskById(int id) {
         return tasks.stream()
-        .filter(t -> t.getId() == id)
-        .findFirst()
-        .orElse(null);
+            .filter(t -> t.getId() == id)
+            .findFirst()
+            .orElseThrow(() -> new NexusValidationException("Tarefa não encontrada: " + id));
     }
+
+    public User getUserByUsername(String username){
+        return Main.getUsers().stream()
+            .filter(u -> u.consultUsername().equals(username))
+            .findFirst()
+            .orElseThrow(() -> new NexusValidationException("Usuário não encontrado: " + username));
+    }
+
     public List<User> topPerformers(){
         return tasks.stream()
             .filter(task -> task.getStatus().equals(TaskStatus.DONE))

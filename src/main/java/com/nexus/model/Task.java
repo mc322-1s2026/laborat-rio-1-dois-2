@@ -97,6 +97,15 @@ public class Task {
         }
     }
 
+    public void changeStatus(TaskStatus newStatus){
+        switch (newStatus){
+            case TO_DO -> this.status = TaskStatus.TO_DO;
+            case IN_PROGRESS -> moveToInProgress();
+            case BLOCKED -> setBlocked(true);   
+            case DONE -> markAsDone();
+        }
+    }
+
     // Getters
     public int getId() { return id; }
     public TaskStatus getStatus() { return status; }
