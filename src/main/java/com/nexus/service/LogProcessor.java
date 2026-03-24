@@ -30,20 +30,14 @@ public class LogProcessor {
                     try {
                         switch (action) {
 
-                            //rever se funciona
                             case "CREATE_USER" -> {
-                                try {
-                                    String username = p[1];
-                                    String email = p[2];
+                                String username = p[1];
+                                String email = p[2];
 
-                                    users.add(new User(username, email));
-                                    System.out.println("[LOG] Usuário criado: " + username);
-                                } catch (Exception e) {
-                                    System.err.println(e.getMessage());
-                                }
+                                users.add(new User(username, email));
+                                System.out.println("[LOG] Usuário criado: " + username);
                             }
                             
-                            //rever se funciona
                             case "CREATE_PROJECT" -> {
                                 String projectName = p[1];
                                 int budgetHours = Integer.parseInt(p[2]);
@@ -68,7 +62,6 @@ public class LogProcessor {
                                 project.addTask(task);
                             }
 
-                            //setar user como owner
                             case "ASSIGN_USER" -> {
                                 int taskId = Integer.parseInt(p[1]);
                                 String username = p[2];
@@ -78,7 +71,7 @@ public class LogProcessor {
 
                                 task.assignUser(user);
 
-                                System.out.println("[LOG] Usúario " + username + "atribuido à tarefa " + taskId);
+                                System.out.println("[LOG] Usúario " + username + " atribuido à tarefa " + taskId);
                             }
 
                             case "CHANGE_STATUS" -> {
@@ -91,7 +84,6 @@ public class LogProcessor {
                                 System.out.println("[LOG] Status da tarefa " + taskId + " alterado para " + newStatus);
                             }
 
-                            //rever se funciona
                             case "REPORT_STATUS" -> {
                                 System.out.println("=== TOP PERFORMERS ===");
                                 workspace.topPerformers()
@@ -110,8 +102,15 @@ public class LogProcessor {
 
                             default -> System.err.println("[WARN] Ação desconhecida: " + action);
                         }
-                    } catch (NexusValidationException e) {
+                    } catch (NexusValidationException e){
+                        Task.totalValidationErrors++;
                         System.err.println("[ERRO DE REGRAS] Falha no comando '" + line + "': " + e.getMessage());
+                    } catch (IllegalArgumentException e){
+                        Task.totalValidationErrors++;
+                        System.err.println("[ERRO DE ENTRADA] Falha no comando '" + line + "': " + e.getMessage());
+                    } catch (Exception e){
+                        Task.totalValidationErrors++;
+                        System.err.println("[ERRO] Falha no comando '" + line + "': " + e.getMessage());
                     }
                 }
             }
