@@ -96,7 +96,7 @@ public class Main {
             User newUser = new User(username, email);
             users.add(newUser);
             System.out.println("[OK] Usuário cadastrado.");
-        } catch (NexusValidationException e) {
+        } catch (IllegalArgumentException e) {
             System.err.println("[ERRO] " + e.getMessage());
         }
     }
@@ -220,26 +220,17 @@ public class Main {
     }
 
     private static void addTaskToProject() {
-        System.out.print("Nome do projeto a ser editado: ");
-        String projectName = scanner.nextLine();
-        System.out.print("ID da task a ser adicionada: ");
-        Integer taskId = Integer.parseInt(scanner.nextLine());
-        Project project = workspace.getProjectByName(projectName);
-        if (project == null) {
-            System.err.print("[ERRO] Projeto não encontrado.");
-        }
-        else {
+        try{
+            System.out.print("Nome do projeto a ser editado: ");
+            String projectName = scanner.nextLine();
+            System.out.print("ID da task a ser adicionada: ");
+            Integer taskId = Integer.parseInt(scanner.nextLine());
+            Project project = workspace.getProjectByName(projectName);
             Task task = workspace. getTaskById(taskId);
-            if (task == null) System.err.print("[ERRO] Tarefa não encontrada.");
-            else {
-                try {
-                    project.addTask(task);
-                    System.out.print("[OK] Tarefa adicionada ao projeto");
-                } catch (Exception e) {
-                    System.err.print(e.getMessage());
-                }
-
-            }
+            project.addTask(task);
+            System.out.print("[OK] Tarefa adicionada ao projeto");
+        } catch (NexusValidationException | IllegalArgumentException e){
+            System.err.print("[ERRO] " + e.getMessage());
         }
     }
 
