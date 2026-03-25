@@ -8,6 +8,31 @@ import java.util.List;
 
 public class LogProcessor {
 
+    /**
+    * Processa um arquivo de log presente no classpath.
+    * 
+    * Para cada linha válida do arquivo:
+    * - interpreta o comando;
+    * - executa a ação correspondente no sistema;
+    * - trata erros sem interromper a execução.
+    * 
+    * Comandos suportados:
+    * - CREATE_USER: cria um novo usuário;
+    * - CREATE_PROJECT: cria um novo projeto;
+    * - CREATE_TASK: cria uma nova tarefa e associa a um projeto;
+    * - ASSIGN_USER: atribui um usuário a uma tarefa;
+    * - CHANGE_STATUS: altera o status de uma tarefa;
+    * - REPORT_STATUS: gera relatórios com métricas do sistema.
+    * 
+    * Tratamento de erros:
+    * - NexusValidationException: erro de regra de negócio;
+    * - IllegalArgumentException: erro de entrada inválida;
+    * - Exception: erro genérico.
+    * 
+    * @param fileName nome do arquivo de log (deve estar no classpath).
+    * @param workspace workspace onde projetos e tarefas serão manipulados.
+    * @param users lista de usuários do sistema.
+    */
     public void processLog(String fileName, Workspace workspace, List<User> users) {
         try {
             // Busca o arquivo dentro da pasta de recursos do projeto (target/classes)
@@ -56,7 +81,7 @@ public class LogProcessor {
 
                                 Task task = new Task(taskName, deadline, effort);
                                 workspace.addTask(task);
-                                System.out.println("[LOG] Tarefa criada: " + taskName + " id:" + task.getId());
+                                System.out.println("[LOG] Tarefa criada: " + taskName + " ID:" + task.getId());
 
                                 Project project = workspace.getProjectByName(projectName);
                                 project.addTask(task);
