@@ -1,17 +1,15 @@
 package com.nexus.model;
-
-import java.util.List;
-
 import com.nexus.exception.NexusValidationException;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class Project {
     private final String name;
     private List<Task> tasks;
     private int totalBudget;
-    private int currentBudget; // sum of the estimatedEfforts of all tasks in project currently
+    private int currentBudget; // soma do estimatedEffort de todas as tarefas no projeto
 
     public Project(String name, int totalBudget) {
         if (name == null || name.isBlank())
@@ -25,6 +23,12 @@ public class Project {
         this.totalBudget = totalBudget;
     }
 
+    /**
+     * Adiciona uma tarefa existente ao projeto.
+     * Regra: se a operação foi feita, soma o estimatedEffort da nova tarefa ao currentBudget do projeto.
+     * @param t
+     * @throws NexusValidationException se o estimatedEffort da tarefa + currentBudget do projeto for maior que totalBudget.
+     */
     public void addTask(Task t) {
         int newBudget = t.getEstimatedEffort() + currentBudget;
         if (newBudget > totalBudget) {
@@ -37,15 +41,8 @@ public class Project {
         
     } 
 
-    public String getName() {
-        return name;
-    }
-
-    public List<Task> getTasks() {
-        return Collections.unmodifiableList(tasks);
-    }
-
-    public int getTotalBudget() {
-        return totalBudget;
-    }
+    // Getters
+    public String getName() { return name; }
+    public List<Task> getTasks() { return Collections.unmodifiableList(tasks); }
+    public int getTotalBudget() { return totalBudget; }
 }

@@ -50,7 +50,8 @@ public class Task {
 
     /**
      * Move a tarefa para IN_PROGRESS.
-     * Regra: Só é possível se houver um owner atribuído e não estiver BLOCKED.
+     * Regra: Se a operação foi feita, incrementa activeWorkload.
+     * @throws NexusValidationException se a tarefa não tem owner ou se a tarefa estava bloquada antes da operação
      */
     public void moveToInProgress() {
         
@@ -63,7 +64,7 @@ public class Task {
             totalValidationErrors++;
             throw new NexusValidationException("Erro ao mudar status: Tarefa não pode ter status BLOCKED.");
         }
-        //Verificação caso seja testado uma tarefa que já está IN_PROGRESS e evitar que o activeWorkload seja incrementado falhamente
+        // Verificação caso seja testado uma tarefa que já está IN_PROGRESS e evitar que o activeWorkload seja incrementado falhamente
         if (this.status != TaskStatus.IN_PROGRESS)
             activeWorkload++;
 
@@ -72,7 +73,8 @@ public class Task {
 
     /**
      * Finaliza a tarefa.
-     * Regra: Só pode ser movida para DONE se não estiver BLOCKED.
+     * Regra: Se a operação foi feita, decrementa activeWorkload.
+     * @throws NexusValidationException se tentou marcar como concluída uma tarefa bloqueada.
      */
     public void markAsDone() {
         if (this.status == TaskStatus.BLOCKED) {
@@ -86,6 +88,12 @@ public class Task {
         this.status = TaskStatus.DONE;
     }
 
+    /**
+     * Move a tarefa para BLOCKED.
+     * Regra: Se a operação foi feita em uma task que tinha status IN_PROGRESS logo antes da operação, decrementa activeWorkload.
+     * @param blocked booleano que bloqueia a task se True e desbloqueia-a se False.
+     * @throws NexusValidationException se tentou bloquear uma tarefa já concluída.
+     */
     public void setBlocked(boolean blocked) {
         if (blocked) {
             if (this.status == TaskStatus.DONE) {
@@ -93,7 +101,7 @@ public class Task {
                 throw new NexusValidationException("Erro ao bloquear tarefa: Tarefa não pode ter status DONE.");
             }
 
-            //Decrementa o activeWorkload porque deixa de existir uma tarefa IN_PROGRESS
+            // Decrementa o activeWorkload porque deixa de existir uma tarefa IN_PROGRESS
             if (this.status == TaskStatus.IN_PROGRESS)
                 activeWorkload--;
 
@@ -103,13 +111,28 @@ public class Task {
         }
     }
 
+    /**
+     * Move a tarefa para TO_DO.
+     * Regra: Se o status for IN_PROGRESS antes da operação, decrementa o activeWorkload.
+     */
+    public void setToDo() {
+        if (this.status == TaskStatus.IN_PROGRESS)
+            activeWorkload--;
+        this.status = TaskStatus.TO_DO;
+    }
+
+    /**
+     * Altera o status da tarefa.
+     * Regras:
+     *  - TO_DO faz uma chamada para {@link #setToDo()}.
+     *  - IN_PROGRESS faz uma chamada para {@link #moveToInProgress()}.
+     *  - BLOCKED faz uma chamada para {@link #setBlocked(boolean)} com valor true.
+     *  - DONE faz uma chamada para {@link #markAsDone()}.
+     * @param newStatus novo status da tarefa.
+     */
     public void changeStatus(TaskStatus newStatus){
         switch (newStatus){
-            case TO_DO -> {
-                if (this.status == TaskStatus.IN_PROGRESS)
-                    activeWorkload--;
-                this.status = TaskStatus.TO_DO;
-            }
+            case TO_DO -> setToDo();
             case IN_PROGRESS -> moveToInProgress();
             case BLOCKED -> setBlocked(true);   
             case DONE -> markAsDone();
